@@ -22,6 +22,7 @@ The following are most of the fundamentals on Solidity for anybody to reference 
 -   [Self Destruct](#self-destruct)
 -   [Events](#events)
 -   [Gas Cost and Estimation](#gas-cost-and-estimation)
+-   [Math and Arithmetic](#math-and-arithmetic)
 
 ---
 
@@ -349,3 +350,10 @@ In the context of Ethereum, **gas** is a fee required to execute transactions or
 -   Gas is set by the user who makes the transaction. A smart contract uses Gas Units.
 -   Ethereum tries to keep it such `that all blocks only receive 8,000,000 gas (soft limit).
 -   `gasleft()`: tells you how much gas is remaining in a transaction.
+
+## Math and Arithmetic
+
+-   To get 21.55, multiply 2155 by 100 and then split the number apart. There are libraries that do this for us already.
+-   If overflows/underflows happen, the contract will revert (only newer compiler versions of Solidity do this). We can you use `assert` to check that calculation will not be an overflow/underflow.
+-   SafeMath library was very popular in older versions of Solidity. Has functions like `.sub`, `.add`, and so on. To use it, you could import the library URL and another way is seen in the **Libraries** section.
+-   Scientific notation can be done as follows: `uint x = 2.999873e10;`.
