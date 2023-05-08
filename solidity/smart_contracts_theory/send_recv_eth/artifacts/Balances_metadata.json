@@ -1,0 +1,72 @@
+{
+	"compiler": {
+		"version": "0.8.17+commit.8df45f5f"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"stateMutability": "payable",
+				"type": "fallback"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "addr",
+						"type": "address"
+					}
+				],
+				"name": "getAmountSent",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"send_recv_eth/Balances.sol": "Balances"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"send_recv_eth/Balances.sol": {
+			"keccak256": "0x688f294f5b0ffcc3f3b3932b912d3b2df6ce1ed96217cb18f6f0fa7b032d4f91",
+			"urls": [
+				"bzz-raw://0f15585cd64985724cfc6c9e8b7748e716daecc69bd027e00a11f898f60619b0",
+				"dweb:/ipfs/QmRnJEPwjujSJqzqsboQwmb8HotoEPnHVXBgsFZqH7JoJG"
+			]
+		}
+	},
+	"version": 1
+}
