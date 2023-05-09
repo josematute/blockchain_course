@@ -110,7 +110,7 @@ Size is determined when it is created/allocated and cannot change.
 Example:
 
 ```Solidity
-unit[5] fixedArray = [1,2,3,4,5];
+uint[5] fixedArray = [1,2,3,4,5];
 ```
 
 ### Dynamic-Sized Array
@@ -119,7 +119,7 @@ Allows elements to be removed and added and can change their size. Can only be d
 Example:
 
 ```Solidity
-unit[] dynamicArray;
+uint[] dynamicArray;
 ```
 
 ### Memory Arrays
@@ -128,13 +128,13 @@ They need to be fixed in size. Its size cannot change after initialization.
 Example:
 
 ```Solidity
-unit[] memory numbers;
+uint[] memory numbers;
 ```
 
 ### Other useful info
 
 -   `.length` works on both array types.
--   cannot initialize an array with dynamic variable size. instead, use: `uint[] name = new unit[](dynamicSize);`
+-   cannot initialize an array with dynamic variable size. instead, use: `uint[] name = new uint[](dynamicSize);`
 -   they are reference type, not value type
 -   assigning a storage array to a memory array creates a copy of the storage array and assigns it to the memory array
 -   memory to memory array creates a reference of the first memory array to the second memory array
@@ -162,7 +162,7 @@ associated data.
 -   Can have nested mappings
 -   For this type, it has to be stored somewhere other than the stack (rule from Solidity).
 -   If needed to be used inside a function, use `storage` keyword and copy an _original_ map created in the state of the contract (which makes it a reference to the _original_ map). Very limited to be used inside a function.
--   To pass in as a parameter, function declaration should look like: `function x(mapping(unit => unit) storage map) internal { ... }`.
+-   To pass in as a parameter, function declaration should look like: `function x(mapping(uint => uint) storage map) internal { ... }`.
 -   **Example** of a smart contract named `Inventory` that declares a state variable named `quantities` that holds a mapping of `uint` to `int` . Each `uint` key will represent the id of a specific item, while each `int` value will be the quantity of that item in the inventory.
     The function `addItem(uint itemId, uint quantity)` adds an item to the inventory by adding it to the `quantities` mapping. If the `itemId` already exists in the mapping it should increment the value associated with the `itemId` key by the passed quantity. The function
     `getQuantity(uint itemId) returns (int)` returns the quantity of the passed `itemId` that is currently stored in the `quantities` mapping. If there is no item with the given `itemId` it returns -1:
@@ -198,10 +198,10 @@ while(true){
 
 ### For
 
-Should be careful with the higher bound of `unit` being used.
+Should be careful with the higher bound of `uint` being used.
 
 ```Solidity
-for (unit i; i<10; i++){
+for (uint i; i<10; i++){
     // ...
 }
 ```
@@ -209,7 +209,7 @@ for (unit i; i<10; i++){
 Looping through an array that can have arbitrary length can be too gas costly. It is preferred to use `mapping`s. Example of looping through an array:
 
 ```Solidity
-for (unit idx; i<array.length; idx++){
+for (uint idx; i<array.length; idx++){
     // access element in array like so: array[idx]
 }
 ```
@@ -258,11 +258,11 @@ Both of the last keywords cannot do the following:
 
 Solidity provides built-in keywords that make working with amounts of Ether easier.
 
--   `wei`: the smallest unit of ether
+-   `wei`: the smallest uint of ether
 -   `gwei`: equal to 1,000,000,000 wei or 109 wei
 -   `ether` : equal to 1,000,000,000,000,000,000 wei or 10e18 wei
     Some keywords:
--   `receive() external payable {}`: Handles receiving Ethereum. Example: Having a `unit public received` variable and executing `received += msg.value;` inside the `receive()` function.
+-   `receive() external payable {}`: Handles receiving Ethereum. Example: Having a `uint public received` variable and executing `received += msg.value;` inside the `receive()` function.
 -   `fallback() external payable {}`: It is called anytime that no function can handle what was sent to the current smart contract. Sort of the last resort. Called when Ethereum is sent to the contract and `msg.data` is not empty, when a function that does not exist is called on the contract, and when the Ethereum is sent to the contract and the `receive` function is not defined.
 -   **_The recommended way to send Ethereum_**: Use `<address payable>.call`. It forwards all of the gas along with whoever is receiving such Ethereum (makes it more flexible than other sending functions). Example:
 
@@ -335,7 +335,7 @@ contract Constructor {
 
 Events are emitted by smart contracts and stored in transaction logs. Useful for transmitting information from a smart contract to the outside of the blockchain network. Clients sitting outside of the blockchain can query event data or listen for specific events to occur.
 
-Example: `event name(params...,)` like `event Bid(address indexed bidder, unit value);` where indexed parameters (max of 3) are fields considered _topics_ that are used to search an event with. Non-indexed parameters are simply considered _data_ and can have as many as you want. You call them like so `emit eventName(params...);`.
+Example: `event name(params...,)` like `event Bid(address indexed bidder, uint value);` where indexed parameters (max of 3) are fields considered _topics_ that are used to search an event with. Non-indexed parameters are simply considered _data_ and can have as many as you want. You call them like so `emit eventName(params...);`.
 
 ## Gas Cost and Estimation
 
@@ -355,5 +355,109 @@ In the context of Ethereum, **gas** is a fee required to execute transactions or
 
 -   To get 21.55, multiply 2155 by 100 and then split the number apart. There are libraries that do this for us already.
 -   If overflows/underflows happen, the contract will revert (only newer compiler versions of Solidity do this). We can you use `assert` to check that calculation will not be an overflow/underflow.
--   SafeMath library was very popular in older versions of Solidity. Has functions like `.sub`, `.add`, and so on. To use it, you could import the library URL and another way is seen in the **Libraries** section.
+-   SafeMath library was very popular in older versions of Solidity. Has functions like `.sub`, `.add`, and so on. To use it, you could import the library URL, and another way is seen in the **Libraries** section.
 -   Scientific notation can be done as follows: `uint x = 2.999873e10;`.
+
+## Time and Time Units
+
+-   **Time Units**: there are various built-in time units. These units make it easier to work with time and timestamps. The following are the valid time units in Solidity: `seconds`, `minutes`, `hours`, `days`, and `weeks`.
+-   **Unix Epoch**: The Unix epoch is the time 00:00:00 UTC on 1 January 1970.
+-   `block.timestamp`: timestamp of when a block was created (added to the blockchain).
+
+## Structs
+
+A typed collection of fields that can be treated like a custom type. Structs are useful for grouping data together.
+Example:
+
+```Solidity
+struct Book {
+    string title;
+    string author;
+    uint book_id;
+}
+```
+
+## Modifiers
+
+A modifier is used to modify the behavior of a function, typically to check repetitive preconditions. Modifiers must include at least one `_`, which represents a call to the modified function. They can take parameters.
+Example:
+
+```Solidity
+modifier onlyOwner {
+    require(msg.sender == owner);
+    _; // automatically calls the function that used this modifier
+}
+```
+
+-   Can have multiple parameters like this: `modifier modifierName(uint value){}` and use it like this: `function functionName(uint num) public payable modifierName(uint value)`.
+-   Can have multiple modifiers.
+-   Multiple modifiers will be called in the order in which they are placedafter a function.
+-   Multiple `_`'s: Calls the function as many times as there are `_`'s.
+
+## Enums
+
+They are a type that allow you to restrict a variable to a predefined list of values. Each value in an `enum` is encoded with a `uint` value starting from `0`.
+Example:
+
+```Solidity
+enum Sizes = {
+    SMALL, // 0
+    MEDIUM, // 1
+    LARGE, // 2
+}
+```
+
+## Inheritance
+
+Refers to when a contract derives/uses the functionality from another contract. Inheritance is a way of reusing/extending functionality. Mny of the OOP's inheritance principles are in Solidity like function overriding, function overloading, the `super` keyword and inheritance with constructors. and method resolution order.
+
+-   To override function: Add `virtual` to function after access modifier in parent contract, and `override` to same function in child contract.
+-   To overload function: No need to use `override`, can simply add additional parameters to inherited function.
+-   `super`: reference methods and variables in base contract.
+-   Multiple inheritance: `contract Child is A, B {}`
+-   Method resolution order: If multiple contracts have the same method name, and a child contract inherits from them and uses `contract Child is A, B {}`, then we look from right to left to resolve same name conflicts. So B's method would be considered first, then A, and so on. This method should use `override(A,B)`.
+-   Example:
+
+```Solidity
+contract Item{
+    uint price;
+
+    constructor(uint _price){
+        price = _price;
+    }
+
+    function getPrice() public view returns(uint) {
+        return price;
+    }
+}
+
+contract Milk is Item(5) {
+    enum Type {
+        OnePercent, TwoPercent
+    }
+    Type milkType;
+    uint litres;
+
+    constructor(Type _milkType, uint _litres){
+        milkType = _milkType;
+        litres = _litres;
+    }
+}
+
+constructor Shopping {
+    Item[] items;
+
+    function addMilk(Type _type, uint litres) public {
+        Milk milk = new Milk(_type, litres);
+        items.push(milk);
+    }
+
+    function getTotalPrice() public view returns (uint){
+        uint price;
+        for(uint idx; idx < items.length; idx++){
+            price = items[idx].getPrice();
+        }
+        return price;
+    }
+}
+```
