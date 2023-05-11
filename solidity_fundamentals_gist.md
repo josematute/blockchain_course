@@ -461,3 +461,31 @@ constructor Shopping {
     }
 }
 ```
+
+## Abstract Contracts
+
+Only used as a base/parent contract and cannot be instantiated. It typically contains at least one abstract function (i.e., a function marked as `virtual`). Declare like this: `abstract contract ContractName {}`. It can have concrete functions AND abstract functions.
+
+## Interfaces
+
+**Interfaces** are used to declare the functionality that deriving/implementing contracts must override. Interfaces are used to view different contracts through the same type. They have the following properties:
+
+-   May not have any function with implementation.
+-   All defined functions must be marked as `external`.
+-   May not have a constructor.
+-   May not have state variables.
+-   May define enums and structs.
+-   Example:
+
+```Solidity
+interface Numeric {
+    function add(uint x) external returns (uint);
+    function subtract(uint x) external returns (uint);
+}
+```
+
+## Libraries
+
+## Contract Storage
+
+## Optimizing Gas Costs
