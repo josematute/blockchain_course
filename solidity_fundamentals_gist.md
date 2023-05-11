@@ -33,7 +33,7 @@ The following are most of the fundamentals on Solidity for anybody to reference 
 -   [Time and Time Units](#time-and-time-units)
 -   [Structs](#structs)
 -   [Modifiers](#modifiers)
--   [Enums](#time-and-time-units)
+-   [Enums](#enums)
 -   [Inheritance](#inheritance)
 -   [Abstract Contracts](#abstract-contracts)
 -   [Interfaces](#interfaces)
