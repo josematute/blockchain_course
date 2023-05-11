@@ -6,6 +6,10 @@ The following are most of the fundamentals on Solidity for anybody to reference 
 
 ---
 
+# Index
+
+### Basics
+
 -   [A basic smart contract](#a-basic-smart-contract)
 -   [Pragma line](#pragma-line)
 -   [Some theory](#some-theory)
@@ -23,6 +27,19 @@ The following are most of the fundamentals on Solidity for anybody to reference 
 -   [Events](#events)
 -   [Gas Cost and Estimation](#gas-cost-and-estimation)
 -   [Math and Arithmetic](#math-and-arithmetic)
+
+### Advanced
+
+-   [Time and Time Units](#time-and-time-units)
+-   [Structs](#structs)
+-   [Modifiers](#modifiers)
+-   [Enums](#time-and-time-units)
+-   [Inheritance](#inheritance)
+-   [Abstract Contracts](#abstract-contracts)
+-   [Interfaces](#interfaces)
+-   [Libraries](#libraries)
+-   [Contract Storage](#contract-storage)
+-   [Optimizing Gas Costs](#optimizing-gas-costs)
 
 ---
 
@@ -258,7 +275,7 @@ Both of the last keywords cannot do the following:
 
 Solidity provides built-in keywords that make working with amounts of Ether easier.
 
--   `wei`: the smallest uint of ether
+-   `wei`: the smallest unit of ether
 -   `gwei`: equal to 1,000,000,000 wei or 109 wei
 -   `ether` : equal to 1,000,000,000,000,000,000 wei or 10e18 wei
     Some keywords:
@@ -391,12 +408,12 @@ modifier onlyOwner {
 
 -   Can have multiple parameters like this: `modifier modifierName(uint value){}` and use it like this: `function functionName(uint num) public payable modifierName(uint value)`.
 -   Can have multiple modifiers.
--   Multiple modifiers will be called in the order in which they are placedafter a function.
+-   Multiple modifiers will be called in the order in which they are placed after a function.
 -   Multiple `_`'s: Calls the function as many times as there are `_`'s.
 
 ## Enums
 
-They are a type that allow you to restrict a variable to a predefined list of values. Each value in an `enum` is encoded with a `uint` value starting from `0`.
+They are a type that allows you to restrict a variable to a predefined list of values. Each value in an `enum` is encoded with a `uint` value starting from `0`.
 Example:
 
 ```Solidity
@@ -409,9 +426,9 @@ enum Sizes = {
 
 ## Inheritance
 
-Refers to when a contract derives/uses the functionality from another contract. Inheritance is a way of reusing/extending functionality. Mny of the OOP's inheritance principles are in Solidity like function overriding, function overloading, the `super` keyword and inheritance with constructors. and method resolution order.
+Refers to when a contract derives/uses the functionality from another contract. Inheritance is a way of reusing/extending functionality. Many of the OOP's inheritance principles are in Solidity like function overriding, function overloading, the `super` keyword, and inheritance with constructors. and method resolution order.
 
--   To override function: Add `virtual` to function after access modifier in parent contract, and `override` to same function in child contract.
+-   To override function: Add `virtual` to the function after the access modifier in the parent contract, and `override` to the same function in the child contract.
 -   To overload function: No need to use `override`, can simply add additional parameters to inherited function.
 -   `super`: reference methods and variables in base contract.
 -   Multiple inheritance: `contract Child is A, B {}`
@@ -486,6 +503,110 @@ interface Numeric {
 
 ## Libraries
 
+They are a collection of reusable utility functions. Libraries contain functions that are called by other contracts and can be deployed independently to save on gas and avoid repeated code.
+
+-   They cannot inherit any elements or be inherited from them.
+-   They are stateless. The functions inside the library can only be `view` or `pure`.
+-   Can not be destroyed using `selfdestruct()` since it cannot have state variables.
+-   Calling its functions is free (does not cost any gas).
+-   There are no fallback or payable functions implemented in libraries.
+-   You can define enums and structs.
+-   Example:
+
+```Solidity
+library Math {
+    function pow(uint a, uint b) public view returns (uint) {
+        return a**b;
+    }
+}
+```
+
 ## Contract Storage
 
+Different kinds of storage locations in smart contracts:
+
+### Storage
+
+`storage` is a persistent location where data associated with a smart contract is held. Storage variable data is stored on the blockchain and is very expensive to read and write from.
+
+-   Permanent/Persistent location
+-   Stored on the blockchain
+-   Expensive to write to
+-   Free to read externally
+-   Can only be modified by the contract that holds the values
+-   Contains 2^256 slots
+-   Each storage slot can hold 32 bytes
+-   Storage slots can store multiple values/variables
+
+### Memory
+
+`memory` is a temporary, mutable storage location that is typically used for holding reference data types. `memory` is a cheaper storage location than contract storage.
+
+-   Temporary location
+-   Stored in RAM
+-   Cheaper to write to
+-   Mutable
+-   Typically used for reference types, like: **structs**, **arrays**, **strings**, **bytes**.
+-   Cleared after function execution
+-   Memory -> Memory = Reference (assigning a memory type to another creates a reference)
+-   Memory -> Storage = Copy
+-   Storage -> Memory = Copy
+-   Storage -> Storage = Reference
+
+### Calldata
+
+`calldata` is a read-only, non-persistent storage location that is used for function parameters. It behaves similarly to memory but it cannot be modified.
+
+-   Temporary location
+-   Only stores function arguments
+-   Behaves similarly to memory
+-   Can be cheaper than memory
+-   Immutable
+-   Useful for ensuring no unintended copies are made
+
+### Stack
+
+In the EVM/Solidity context, the stack is a temporary internal storage location where variables are stored in 32-byte slots. It is used for small local variables and the value types of functions (i.e., the type of parameters and return values).
+
+-   Temporary location
+-   Internal location, not directly accessible (requires assembly)
+-   Used for small local variables
+-   Stores function value types (`uint`, `int`, `string`, etc.)
+-   Can hold up to 1024 values
+
+### Logs
+
+Ethereum smart contracts can emit events, these events are stored in transaction receipts in a special area known as **logs**. Logs give you information about what happened during smart contract execution.
+
+-   Associated with transactions
+-   Cannot be accessed by smart contracts
+-   Where event data is stored
+-   Cheap data structure
+-   Useful for returning information to the caller of a function
+-   Accessed off the blockchain
+
+### Code
+
+The code itself could be considered storage.
+
+-   The actual code of the contract
+-   Stored on the blockchain
+-   Constant variables stored here
+
 ## Optimizing Gas Costs
+
+Poorly optimized smart contracts can quickly become voracious gas consumers. Here are some tricks you can use to keep your smart contracts in check and make them less gassy:
+
+-   Use `calldata` because it is cheaper than `memory` and if you just want to see variables' values, but it is limiting because you cannot modify those variables.
+-   Pack variables: Slot's sizes are 256 bits. Create variables in order of `uint` size in order to have fewer slots (pack variables).
+-   Delete unused variables: Whenever you free space in a contract, use `delete` instead of manually resetting the values yourself.
+-   Don't shrink variables: If there is no specific need to use a smaller variable value than the default value, then do it. Only shrink if you are packing variables together.
+-   If you can emit an event instead of storing that information in the contract, then do so, unless such data has to be private/secure.
+-   Use libraries. If a good amount of contracts have the same logic, such logic can be put in a library and be reused in the contracts.
+-   Use short-circuiting rules: If there's no need to bother to check all the sides of a boolean expression, then put the most important one in front such that a boolean expression can finish faster. If you have `true || false`, then the compiler only evaluates `true` since it already satisfies the `||` logic.
+-   Avoid assignments: If you do not have to do an assignment like default values, then don't do them. (`uint x;` better than `uint x = 0;`)
+-   Avoid operations on storage. Instead, you can cache the original variable, update the caching variable, and then assign the cached value to the original variable.
+-   A fixed-sized array is cheaper to store than a dynamic-sized array.
+-   Mappings are cheaper than arrays.
+-   Using `bytes` type is cheaper than `string`.
+-   Use `external` over `public` modifier. `public` means that a function can be called in the same contract as well as externally. If this is the case, the compiler does more work and uses more gas. If a function is simply just called externally, use `external`.
