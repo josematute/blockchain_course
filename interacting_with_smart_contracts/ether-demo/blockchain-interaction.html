@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Ethers.js</title>
+	</head>
+	<body>
+		<button onclick="sendMoney()">Call Contract</button>
+		<script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+		<script>
+			const provider = new ethers.providers.Web3Provider(window.ethereum)
+			async function sendMoney() {
+				await provider.send("eth_requestAccounts", [])
+				const signer = provider.getSigner()
+				const address = "dai.tokens.ethers.eth"
+
+				// ABI: application binary interface -> allows us to interact with smart contracts
+				// allows to encode regular plain text data into binary format so that EVM understands
+				// functions being called in smart contract
+				const daiAbi = [
+					// Some details about the token
+					"function name() view returns (string)",
+					"function symbol() view returns (string)",
+
+					// get the account balance
+					"function balanceOf(address) view returns (uint)",
+
+					// send some of your tokens to someone else
+					"function transfer(address to, uint amount)",
+
+					// an event triggered whenever anyone transfers to someone else
+					"event Transfer(address indexed from, address indexed to, uint amount)"
+				]
+
+				// local reference of actual contract in the blockchain
+				// interact with smart contract in a non only read only way
+				const daiContract = new ethers.Contract(address, daiAbi, signer)
+				const tx = await daiContract.transfer("0x6b175474e89094c44da98b954eedeac495271d0f", 1)
+				console.log(tx)
+			}
+		</script>
+	</body>
+</html>
