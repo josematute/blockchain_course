@@ -1,0 +1,58 @@
+{
+	"compiler": {
+		"version": "0.8.18+commit.87f61d96"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "value",
+						"type": "uint256"
+					}
+				],
+				"name": "add",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"web3-tools/src/contract.sol": "Contract"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"web3-tools/src/contract.sol": {
+			"keccak256": "0x0adc4d072383d291780a2d8fa7bb28c9f3ae9fcbd64b15add017cc0ecc9dcd65",
+			"urls": [
+				"bzz-raw://2c5c0eb1d412c6783ddaa3dbf51c83129b5e604ca126020ed228ab5a2c2e4b09",
+				"dweb:/ipfs/QmduVoxTWT4UcQ9vXD9fNyo9r1giNdHLRiBSmJAy8mVuuB"
+			]
+		}
+	},
+	"version": 1
+}
