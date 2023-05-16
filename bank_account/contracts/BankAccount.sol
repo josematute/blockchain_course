@@ -45,7 +45,7 @@ contract BankAccount {
                 break;
             }
         }
-        require(isOwner, "you are not an onwer of this account");
+        require(isOwner, "you are not an owner of this account");
         _;
     }
 
@@ -53,6 +53,9 @@ contract BankAccount {
         require(owners.length + 1 <= 4, "maximum of 4 owners per account");
         // check for no owner duplicates
         for (uint i; i < owners.length; i++) {
+            if (owners[i] == msg.sender) {
+                revert("no duplicate owners");
+            }
             for (uint j = i + 1; j < owners.length; j++) {
                 if (owners[i] == owners[j]) {
                     revert("no duplicate owners");
@@ -67,7 +70,7 @@ contract BankAccount {
         _;
     }
 
-    modifier canApprove(uint accountId, withdrawId) {
+    modifier canApprove(uint accountId, uint withdrawId) {
         require(
             !accounts[accountId].withdrawRequests[withdrawId].approved,
             "this request is already approved"
@@ -102,7 +105,7 @@ contract BankAccount {
     }
 
     function deposit(uint accountId) external payable accountOwner(accountId) {
-        accounts[accountId].balance += msg.sender;
+        accounts[accountId].balance += msg.value;
     }
 
     function createAccount(
