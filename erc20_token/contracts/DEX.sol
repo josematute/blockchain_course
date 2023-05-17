@@ -14,7 +14,7 @@ contract DEX {
         price = _price;
     }
 
-    modifier onlyOnwer() {
+    modifier onlyOwner() {
         require(msg.sender == owner, "you are not the owner");
         _;
     }
