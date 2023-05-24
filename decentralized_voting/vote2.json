@@ -1,0 +1,4 @@
+{
+	"description": "Which is your favorite frontend JavaScript framework?",
+	"options": ["React", "Vue", "Angular", "Svelte", "Ember"]
+}
